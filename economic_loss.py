@@ -29,14 +29,16 @@ app.layout=html.Div([
 ])
 
 def getFig():  #create choropleth graph
-    dff_freq = df_freq.copy()
     dff_cost = df_cost.copy()
     fig = go.Figure(data=go.Choropleth(
-    locations=dff_freq['state'], # Spatial coordinates
-    z = df['wildfire'].astype(float), # Data to be color-coded
+    locations=dff_cost['state'], # Spatial coordinates
+    z = dff_cost['wildfire'].astype(float), # Data to be color-coded
     locationmode = 'USA-states', # set of locations match entries in `locations`
     colorscale = 'Blues',
-    colorbar_title = "Millions USD",
+    colorbar_title = "Billions USD",
+    ))
+    return fig
+
 ))
 
 
