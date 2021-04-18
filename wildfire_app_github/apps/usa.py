@@ -180,7 +180,10 @@ def update_graph(year_slctd, size_slctd):
     if year_slctd[0] == year_slctd[1]:
         container = "Wildfires in " + str(year_slctd[0])
     dff_state = dff.STATE.value_counts().rename_axis('State').reset_index(name='Counts')
-
+    state_list = dff_state.State.tolist()
+    for i in us_state_abbrev.values():
+        if i not in state_list:
+            dff_state.loc[len(dff_state.index)] = [i, 0]
 
 
     #Plotly Express
