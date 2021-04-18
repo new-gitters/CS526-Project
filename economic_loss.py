@@ -1,5 +1,6 @@
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -9,11 +10,23 @@ import dash_bootstrap_components as dbc
 
 #resource https://www.ncdc.noaa.gov/billions/time-series/US
 
-df_freq=df.read_csv('./state-freq-data.csv', delimiter=",")
-df_cost=df.read_csv('./state-freq-data.csv', delimiter=",")
+df_freq=pd.read_csv('./state-freq-data.csv', delimiter=",")
+df_cost=pd.read_csv('./state-cost-data.csv', delimiter=",")
 
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LITERA])
 
+def getFig():  #create choropleth graph
+    dff_cost = df_cost.copy()
+    print(dff_cost.head())
+    fig = go.Figure(data=go.Choropleth(
+    locations=dff_cost['state'], # Spatial coordinates
 
+    z = dff_cost['wildfire'].astype(float), # Data to be color-coded
+    locationmode = 'USA-states', # set of locations match entries in `locations`
+    colorscale = 'Blues',
+    colorbar_title = "Billions USD",
+    ))
+    return fig
 
 app.layout=html.Div([
     # represents the URL bar, doesn't render anything
@@ -28,19 +41,12 @@ app.layout=html.Div([
 
 ])
 
-def getFig():  #create choropleth graph
-    dff_cost = df_cost.copy()
-    fig = go.Figure(data=go.Choropleth(
-    locations=dff_cost['state'], # Spatial coordinates
-    z = dff_cost['wildfire'].astype(float), # Data to be color-coded
-    locationmode = 'USA-states', # set of locations match entries in `locations`
-    colorscale = 'Blues',
-    colorbar_title = "Billions USD",
-    ))
-    return fig
 
-))
 
+
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
 
 
 
