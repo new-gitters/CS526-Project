@@ -85,6 +85,7 @@ stateCount=df['STATE'].value_counts()
 cfg['states']=stateCount.index.tolist()
 cfg['timeout']          = 5*60     # Used in flask_caching
 selections = set()
+cfg['clicked_state']=None   #initialzied the 
 
 colors = {
     'background': '#1F2630',
@@ -158,7 +159,6 @@ app.layout = get_layout()
     [Input(component_id='slct_year', component_property='value')],
     [Input(component_id='slct_size', component_property='value')]
 )
-
 def update_graph(year_slctd, size_slctd):
     dff = df.copy()
     dff = dff[(dff["FIRE_YEAR"] >= year_slctd[0]) & (dff["FIRE_YEAR"] <= year_slctd[1])]
@@ -195,7 +195,7 @@ def update_graph(year_slctd, size_slctd):
 
     #########################################################
 
-    fig_map.update_layout(clickmode='event')  #add the click event
+    fig_map.update_layout(clickmode='event+select')  #add the click event
 
     fig_bar_states = px.bar(dff_state, x='State', y='Counts', title='Fires by State', labels={'Counts':'Number of Fires'}, template='plotly_dark')
     fig_bar_states.update_layout(
@@ -242,6 +242,8 @@ def get_wildfire_by_year(state):
      )
 
 def update_price_timeseries(clickData):
+    print(clickData)
+    #can try to set he click data as geojson
     empty_series = pd.DataFrame(np.full(len(cfg['Years']), np.nan), index=cfg['Years'])
     empty_series.rename(columns={0: ''}, inplace=True)
 
